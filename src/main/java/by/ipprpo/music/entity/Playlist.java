@@ -40,6 +40,13 @@ public class Playlist {
         return true;
     }
 
+    public boolean removeTrack(Track track) {
+        if (track == null || !trackList.contains(track)) {
+            return false;
+        }
+        return trackList.remove(track);
+    }
+
     @Override
     public String toString() {
         return "Playlist{id=" + id + ", playlistName='" + playlistName + "', owner=" + owner + ", tracksCount=" + trackList.size() + "}";

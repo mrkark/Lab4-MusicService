@@ -78,4 +78,32 @@ public class PlaylistServiceTest {
         System.out.println("[ТЕСТ 3] Результат: дубликат трека успешно обнаружен и отклонён.");
         System.out.println("--------------------------------------------------");
     }
+
+    @Test
+    @DisplayName("Тест 4 (Вариант 11, ЛР №4): Удаление трека из плейлиста")
+    void testRemoveTrackFromPlaylist_Variant11() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("[ТЕСТ 4] Запуск: testRemoveTrackFromPlaylist_Variant11 (Инд. задание Вариант 11, ЛР №4)");
+        User testUser = new User(1, "Ivan");
+        Track track1 = new Track(1, "Believer", "Imagine Dragons");
+        Track track2 = new Track(2, "Natural", "Imagine Dragons");
+
+        playlistService.createPlaylist(1, testUser, "Rock Playlist");
+        playlistService.addTrackToPlaylist(1, track1);
+        playlistService.addTrackToPlaylist(1, track2);
+        assertEquals(2, repository.findById(1).getTracks().size(), "В плейлисте должно быть 2 трека перед удалением");
+
+        boolean removed = playlistService.removeTrackFromPlaylist(1, track1);
+        assertTrue(removed, "Трек track1 должен быть успешно удален из плейлиста");
+        assertEquals(1, repository.findById(1).getTracks().size(), "В плейлисте должен остаться ровно 1 трек");
+        assertFalse(repository.findById(1).getTracks().contains(track1), "Плейлист больше не должен содержать удаленный трек");
+        assertTrue(repository.findById(1).getTracks().contains(track2), "Второй трек должен остаться в плейлисте");
+
+        // Попытка удалить несуществующий трек
+        boolean removeAgain = playlistService.removeTrackFromPlaylist(1, track1);
+        assertFalse(removeAgain, "Повторное удаление того же трека должно возвращать false");
+
+        System.out.println("[ТЕСТ 4] Результат: операция удаления трека из плейлиста успешно протестирована.");
+        System.out.println("--------------------------------------------------");
+    }
 }

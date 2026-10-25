@@ -29,4 +29,17 @@ public class PlaylistService {
         }
         return added;
     }
+
+    public boolean removeTrackFromPlaylist(int playlistId, Track track) {
+        Playlist playlist = repository.findById(playlistId);
+        if (playlist == null) {
+            return false;
+        }
+
+        boolean removed = playlist.removeTrack(track);
+        if (removed) {
+            repository.save(playlist);
+        }
+        return removed;
+    }
 }
