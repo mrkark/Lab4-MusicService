@@ -14,5 +14,6 @@ target/
 # OS and temp files
 *.tmp
 *.log
+*.bat
 .DS_Store
 Thumbs.db
