@@ -15,5 +15,6 @@ target/
 *.tmp
 *.log
 *.bat
+*.py
 .DS_Store
 Thumbs.db
