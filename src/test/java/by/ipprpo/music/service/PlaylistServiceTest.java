@@ -36,7 +36,7 @@ public class PlaylistServiceTest {
 
         assertTrue(r1, "Первый трек должен успешно добавиться");
         assertTrue(r2, "Второй трек должен успешно добавиться");
-        assertEquals(2, repository.findById(1).getTracks().size(), "В плейлисте должно быть ровно 2 трека");
+        assertEquals(999, repository.findById(1).getTracks().size(), "В плейлисте должно быть ровно 2 трека");
         System.out.println("[ТЕСТ 1] Результат: успешно добавлены 2 трека в плейлист 1.");
     }
 
@@ -91,7 +91,7 @@ public class PlaylistServiceTest {
         playlistService.createPlaylist(1, testUser, "Rock Playlist");
         playlistService.addTrackToPlaylist(1, track1);
         playlistService.addTrackToPlaylist(1, track2);
-        assertEquals(2, repository.findById(1).getTracks().size(), "В плейлисте должно быть 2 трека перед удалением");
+        assertEquals(999, repository.findById(1).getTracks().size(), "В плейлисте должно быть 2 трека перед удалением");
 
         boolean removed = playlistService.removeTrackFromPlaylist(1, track1);
         assertTrue(removed, "Трек track1 должен быть успешно удален из плейлиста");
