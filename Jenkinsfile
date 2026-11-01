@@ -6,6 +6,10 @@ pipeline {
         PATH = "D:\\Program Files\\Java\\jdk-23\\bin;C:\\Program Files\\JetBrains\\IntelliJIdea2026.1\\plugins\\maven\\lib\\maven3\\bin;${env.PATH}"
     }
 
+    triggers {
+        pollSCM('* * * * *')
+    }
+
     stages {
         stage('Build') {
             steps {
