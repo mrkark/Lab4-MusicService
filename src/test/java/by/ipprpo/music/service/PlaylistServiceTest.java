@@ -36,7 +36,7 @@ public class PlaylistServiceTest {
 
         assertTrue(r1, "Первый трек должен успешно добавиться");
         assertTrue(r2, "Второй трек должен успешно добавиться");
-        assertEquals(999, repository.findById(1).getTracks().size(), "В плейлисте должно быть ровно 2 трека");
+        assertEquals(2, repository.findById(1).getTracks().size(), "В плейлисте должно быть ровно 2 трека");
         System.out.println("[ТЕСТ 1] Результат: успешно добавлены 2 трека в плейлист 1.");
     }
 
