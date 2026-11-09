@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class Track {
     private int id;
-    private int bad_checkstyle_variable = 0;
     private String trackName;
     private String artist;
 
