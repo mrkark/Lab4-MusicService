@@ -16,14 +16,19 @@ pipeline {
                 bat 'mvn compile'
             }
         }
+        // Этап статического анализа кода Checkstyle (ЛР №5)
+        stage('Static Analysis') {
+            steps {
+                bat 'mvn checkstyle:check'
+            }
+        }
         stage('Test') {
             steps {
                 bat 'mvn test'
             }
         }
-        // Индивидуальное задание (Вариант 11):
-        // Отдельный этап с отдельной Maven-командой перед Package.
-        // Загружает и проверяет доступность всех зависимостей проекта перед упаковкой в JAR.
+        // Индивидуальное задание (Вариант 11, ЛР №3/4):
+        // Проверка и разрешение зависимостей перед сборкой пакета
         stage('Resolve Dependencies') {
             steps {
                 bat 'mvn dependency:resolve'
@@ -37,7 +42,7 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline успешно завершен! Проект успешно получен из Git, протестирован и упакован в JAR.'
+            echo 'Pipeline успешно завершен! Проект прошел компиляцию, Checkstyle-анализ, тестирование и упаковку в JAR.'
         }
         failure {
             echo 'Сборка Pipeline завершилась с ошибкой!'

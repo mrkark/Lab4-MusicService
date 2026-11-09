@@ -21,16 +21,25 @@ public class Track {
         return trackName;
     }
 
+    public String getTitle() {
+        return trackName;
+    }
+
     public String getArtist() {
         return artist;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Track track = (Track) o;
-        return id == track.id || (Objects.equals(trackName, track.trackName) && Objects.equals(artist, track.artist));
+        return id == track.id
+                || (Objects.equals(trackName, track.trackName) && Objects.equals(artist, track.artist));
     }
 
     @Override

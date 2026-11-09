@@ -17,6 +17,10 @@ public class User {
         return userName;
     }
 
+    public String getName() {
+        return userName;
+    }
+
     @Override
     public String toString() {
         return "User{id=" + id + ", userName='" + userName + "'}";

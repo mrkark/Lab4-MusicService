@@ -49,6 +49,7 @@ public class Playlist {
 
     @Override
     public String toString() {
-        return "Playlist{id=" + id + ", playlistName='" + playlistName + "', owner=" + owner + ", tracksCount=" + trackList.size() + "}";
+        return "Playlist{id=" + id + ", playlistName='" + playlistName + "', owner=" + owner
+                + ", tracksCount=" + trackList.size() + "}";
     }
 }

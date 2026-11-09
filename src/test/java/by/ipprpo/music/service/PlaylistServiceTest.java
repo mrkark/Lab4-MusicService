@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Основные тесты PlaylistService (из ЛР №1)")
+@DisplayName("Основные тесты PlaylistService")
 public class PlaylistServiceTest {
     private PlaylistService playlistService;
     private IPlaylistRepository repository;
@@ -104,6 +104,35 @@ public class PlaylistServiceTest {
         assertFalse(removeAgain, "Повторное удаление того же трека должно возвращать false");
 
         System.out.println("[ТЕСТ 4] Результат: операция удаления трека из плейлиста успешно протестирована.");
+        System.out.println("--------------------------------------------------");
+    }
+
+    @Test
+    @DisplayName("Тест 5 (ЛР №5, Вариант 11): Проверка Logging (INFO, WARN, ERROR)")
+    void testLoggingScenarios_Variant11_Lab5() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("[ТЕСТ 5] Запуск: testLoggingScenarios_Variant11_Lab5 (Журналирование ЛР №5)");
+        User testUser = new User(10, "Olga");
+        Track track = new Track(101, "Thunder", "Imagine Dragons");
+
+        // 1. INFO сценарий: создание и успешное добавление
+        playlistService.createPlaylist(10, testUser, "Pop Rock");
+        boolean added = playlistService.addTrackToPlaylist(10, track);
+        assertTrue(added, "Трек должен успешно добавиться (лог INFO)");
+
+        // 2. WARN сценарий: повторное добавление дубликата
+        boolean duplicateAdded = playlistService.addTrackToPlaylist(10, track);
+        assertFalse(duplicateAdded, "Дубликат не должен добавиться (лог WARN)");
+
+        // 3. WARN сценарий: добавление в несуществующий плейлист
+        boolean nonExistentAdded = playlistService.addTrackToPlaylist(999, track);
+        assertFalse(nonExistentAdded, "Добавление в несуществующий плейлист должно вернуть false (лог WARN)");
+
+        // 4. ERROR сценарий: добавление null трека
+        boolean nullAdded = playlistService.addTrackToPlaylist(10, null);
+        assertFalse(nullAdded, "Добавление null трека должно вернуть false (лог ERROR)");
+
+        System.out.println("[ТЕСТ 5] Результат: все сценарии Logging (INFO, WARN, ERROR) успешно выполнены.");
         System.out.println("--------------------------------------------------");
     }
 }

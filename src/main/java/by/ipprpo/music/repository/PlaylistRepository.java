@@ -9,7 +9,9 @@ public class PlaylistRepository implements IPlaylistRepository {
 
     @Override
     public void save(Playlist playlist) {
-        if (playlist == null) return;
+        if (playlist == null) {
+            return;
+        }
         storage.removeIf(p -> p.getId() == playlist.getId());
         storage.add(playlist);
     }
