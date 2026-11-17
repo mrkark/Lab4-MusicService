@@ -7,7 +7,7 @@ pipeline {
     }
 
     triggers {
-        pollSCM('* * * * *')
+        pollSCM('*/2 * * * *')
     }
 
     stages {
@@ -16,7 +16,6 @@ pipeline {
                 bat 'mvn compile'
             }
         }
-        // Этап статического анализа кода Checkstyle (ЛР №5)
         stage('Static Analysis') {
             steps {
                 bat 'mvn checkstyle:check'
@@ -27,8 +26,7 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        // Индивидуальное задание (Вариант 11, ЛР №3/4):
-        // Проверка и разрешение зависимостей перед сборкой пакета
+
         stage('Resolve Dependencies') {
             steps {
                 bat 'mvn dependency:resolve'
