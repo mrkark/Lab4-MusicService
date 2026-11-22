@@ -156,7 +156,7 @@ public class PlaylistServiceTest {
         boolean played = playlistService.playTrack(1, 1);
         assertTrue(played, "Воспроизведение доступного трека должно пройти успешно");
 
-        assertEquals(prevSuccess + 999.0, metricsManager.getPlaybackSuccessTotal(), 0.001,
+        assertEquals(prevSuccess + 1.0, metricsManager.getPlaybackSuccessTotal(), 0.001,
                 "Метрика music_service_playback_success_total должна увеличиться на 1");
         assertEquals(prevTotal + 1.0, metricsManager.getOperationsTotal(), 0.001,
                 "Метрика application_operations_total должна увеличиться на 1");
