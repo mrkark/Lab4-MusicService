@@ -2,6 +2,7 @@ package by.ipprpo.music.service;
 
 import by.ipprpo.music.entity.Track;
 import by.ipprpo.music.entity.User;
+import by.ipprpo.music.metrics.MetricsManager;
 import by.ipprpo.music.repository.IPlaylistRepository;
 import by.ipprpo.music.repository.PlaylistRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlaylistServiceTest {
     private PlaylistService playlistService;
     private IPlaylistRepository repository;
+    private MetricsManager metricsManager;
 
     @BeforeEach
     void setUp() {
         repository = new PlaylistRepository();
-        playlistService = new PlaylistService(repository);
+        metricsManager = new MetricsManager();
+        playlistService = new PlaylistService(repository, metricsManager);
     }
 
     @Test
@@ -133,6 +136,93 @@ public class PlaylistServiceTest {
         assertFalse(nullAdded, "Добавление null трека должно вернуть false (лог ERROR)");
 
         System.out.println("[ТЕСТ 5] Результат: все сценарии Logging (INFO, WARN, ERROR) успешно выполнены.");
+        System.out.println("--------------------------------------------------");
+    }
+
+    @Test
+    @DisplayName("Тест 6 (ЛР №6, Вариант 11): Успешное воспроизведение трека и фиксация метрик")
+    void testPlayTrack_Success_Variant11_Lab6() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("[ТЕСТ 6] Запуск: testPlayTrack_Success_Variant11_Lab6 (Воспроизведение трека)");
+        User testUser = new User(1, "Ivan");
+        Track track = new Track(1, "Believer", "Imagine Dragons", true);
+
+        playlistService.createPlaylist(1, testUser, "Rock");
+        playlistService.addTrackToPlaylist(1, track);
+
+        double prevSuccess = metricsManager.getPlaybackSuccessTotal();
+        double prevTotal = metricsManager.getOperationsTotal();
+
+        boolean played = playlistService.playTrack(1, 1);
+        assertTrue(played, "Воспроизведение доступного трека должно пройти успешно");
+
+        assertEquals(prevSuccess + 1.0, metricsManager.getPlaybackSuccessTotal(), 0.001,
+                "Метрика music_service_playback_success_total должна увеличиться на 1");
+        assertEquals(prevTotal + 1.0, metricsManager.getOperationsTotal(), 0.001,
+                "Метрика application_operations_total должна увеличиться на 1");
+        System.out.println("[ТЕСТ 6] Результат: успешное воспроизведение зафиксировано в метриках.");
+        System.out.println("--------------------------------------------------");
+    }
+
+    @Test
+    @DisplayName("Тест 7 (ЛР №6, Вариант 11): Попытка воспроизведения недоступного трека")
+    void testPlayTrack_Unavailable_Variant11_Lab6() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("[ТЕСТ 7] Запуск: testPlayTrack_Unavailable_Variant11_Lab6 (Недоступный трек)");
+        User testUser = new User(1, "Ivan");
+        Track unavailableTrack = new Track(2, "Banned Song", "Artist", false);
+
+        playlistService.createPlaylist(1, testUser, "Playlist");
+        playlistService.addTrackToPlaylist(1, unavailableTrack);
+
+        double prevErrors = metricsManager.getPlaybackErrorTotal();
+        double prevOpErrors = metricsManager.getOperationsErrorTotal();
+
+        boolean played = playlistService.playTrack(1, 2);
+        assertFalse(played, "Воспроизведение недоступного трека должно вернуть false");
+
+        assertEquals(prevErrors + 1.0, metricsManager.getPlaybackErrorTotal(), 0.001,
+                "Метрика music_service_playback_error_total должна увеличиться на 1");
+        assertEquals(prevOpErrors + 1.0, metricsManager.getOperationsErrorTotal(), 0.001,
+                "Метрика application_operations_error_total должна увеличиться на 1");
+
+        // Проверка несуществующего трека
+        boolean nonExistent = playlistService.playTrack(1, 9999);
+        assertFalse(nonExistent, "Воспроизведение несуществующего трека должно вернуть false");
+        assertEquals(prevErrors + 2.0, metricsManager.getPlaybackErrorTotal(), 0.001,
+                "Метрика music_service_playback_error_total должна увеличиться на 2");
+
+        System.out.println("[ТЕСТ 7] Результат: попытка воспроизведения недоступного трека зафиксирована в ошибках.");
+        System.out.println("--------------------------------------------------");
+    }
+
+    @Test
+    @DisplayName("Тест 8 (ЛР №6): Проверка формата выгрузки метрик для Prometheus Scrape")
+    void testPrometheusScrapeOutput_Lab6() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("[ТЕСТ 8] Запуск: testPrometheusScrapeOutput_Lab6 (Формат Scrape Prometheus)");
+        User testUser = new User(1, "Ivan");
+        Track track = new Track(1, "Believer", "Imagine Dragons", true);
+
+        playlistService.createPlaylist(1, testUser, "Test");
+        playlistService.addTrackToPlaylist(1, track);
+        playlistService.playTrack(1, 1);
+        playlistService.playTrack(1, 999);
+
+        String scrape = metricsManager.scrape();
+        assertNotNull(scrape, "Scrape не должен быть null");
+        assertTrue(scrape.contains("application_operations_total"),
+                "Scrape должен содержать application_operations_total");
+        assertTrue(scrape.contains("application_operations_success_total"),
+                "Scrape должен содержать application_operations_success_total");
+        assertTrue(scrape.contains("application_operations_error_total"),
+                "Scrape должен содержать application_operations_error_total");
+        assertTrue(scrape.contains("music_service_playback_success_total"),
+                "Scrape должен содержать music_service_playback_success_total");
+        assertTrue(scrape.contains("music_service_playback_error_total"),
+                "Scrape должен содержать music_service_playback_error_total");
+
+        System.out.println("[ТЕСТ 8] Результат: Scrape-вывод корректно сформирован для Prometheus.");
         System.out.println("--------------------------------------------------");
     }
 }

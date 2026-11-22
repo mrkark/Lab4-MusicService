@@ -25,7 +25,7 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-        <!-- 2. Соглашения по именованию (Naming Conventions) -->
+        <!-- 2. Соглашения по именованию -->
         <module name="PackageName">
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
         </module>
@@ -35,7 +35,7 @@
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
 
-        <!-- 3. Оформление блоков кода и фигурные скобки (Braces) -->
+        <!-- 3. Оформление блоков кода и фигурные скобки -->
         <module name="NeedBraces"/>
         <module name="LeftCurly"/>
         <module name="RightCurly"/>

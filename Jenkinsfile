@@ -39,8 +39,12 @@ pipeline {
         }
     }
     post {
+        always {
+            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.jar, target/checkstyle-result.xml'
+        }
         success {
-            echo 'Pipeline успешно завершен! Проект прошел компиляцию, Checkstyle-анализ, тестирование и упаковку в JAR.'
+            echo 'Pipeline успешно завершен! Все этапы: Build, Static Analysis, Test, Package успешно пройдены.'
         }
         failure {
             echo 'Сборка Pipeline завершилась с ошибкой!'

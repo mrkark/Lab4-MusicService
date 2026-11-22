@@ -6,11 +6,17 @@ public class Track {
     private int id;
     private String trackName;
     private String artist;
+    private boolean available;
 
     public Track(int id, String trackName, String artist) {
+        this(id, trackName, artist, true);
+    }
+
+    public Track(int id, String trackName, String artist, boolean available) {
         this.id = id;
         this.trackName = trackName;
         this.artist = artist;
+        this.available = available;
     }
 
     public int getId() {
@@ -27,6 +33,14 @@ public class Track {
 
     public String getArtist() {
         return artist;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @Override
@@ -49,6 +63,7 @@ public class Track {
 
     @Override
     public String toString() {
-        return "Track{id=" + id + ", trackName='" + trackName + "', artist='" + artist + "'}";
+        return "Track{id=" + id + ", trackName='" + trackName + "', artist='" + artist
+                + "', available=" + available + "}";
     }
 }
